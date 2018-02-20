@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  
+  <!-- JQuery -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+    crossorigin="anonymous">
+    
+  <link rel="stylesheet" type="text/css" href="style.css">
+
+  <title>Knapsack solver</title>
+</head>
+
+<body>
+  <h1 class="text-center">Knapsack solver</h1>
+  <div class="container">
+    <form>
+      <div class="form-group">
+        <label>Knapsack problem</label>
+        <select class="custom-select">
+          <option selected>Choose...</option>
+          <option value="1">Value Independent KP</option>
+          <option value="2">Multiple KP</option>
+          <option value="3">Multiple Value Independent KP</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Algorithm</label>
+        <select class="custom-select">
+          <option selected>Choose...</option>
+          <option value="1">Greedy</option>
+          <option value="2">Dynamic programming</option>
+          <option value="3">Branch & Bound</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Dataset</label>
+        <div class="custom-file">
+          <input type="file" class="custom-file-input" id="customFile">
+          <label class="custom-file-label" for="customFile">Choose file</label>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary">Solve</button>
+    </form>
+  </div>
+
+
+  <script src="changefilename.js"></script>
+</body>
+
+</html>
