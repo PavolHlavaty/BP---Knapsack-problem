@@ -24,7 +24,7 @@
     <form>
       <div class="form-group">
         <label>Knapsack problem</label>
-        <select class="custom-select">
+        <select id="knapsack_type" class="custom-select">
           <option selected>Choose...</option>
           <option value="1">Value Independent KP</option>
           <option value="2">Multiple KP</option>
@@ -34,7 +34,7 @@
 
       <div class="form-group">
         <label>Algorithm</label>
-        <select class="custom-select">
+        <select id="algorithm" class="custom-select">
           <option selected>Choose...</option>
           <option value="1">Greedy</option>
           <option value="2">Dynamic programming</option>
@@ -56,6 +56,10 @@
 
 
   <script src="changefilename.js"></script>
+  <script src="./algorithms/VIKP_dynamic_programming.js"></script>
+  <script src="./algorithms/VIKP_greedy.js"></script>
+  <script src="./algorithms/VIKP_branch_and_bound.js"></script>
+  <script src="submitHandler.js"></script>
 </body>
 
 </html>
