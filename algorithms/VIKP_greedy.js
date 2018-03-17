@@ -14,7 +14,7 @@ function VIKP_greedy (capacity, items) {
 	for (var i = 0; i < items.length; i++) {
 		if (items[i].weight < cap) {
 			solution += items[i].weight;
-			solutionSubset.push({ index: items[i].index, item: items[i] });
+			solutionSubset.push(items[i]);
 			cap -= items[i].weight;
 		} 
 	}
