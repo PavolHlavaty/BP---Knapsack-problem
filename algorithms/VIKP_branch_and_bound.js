@@ -42,16 +42,12 @@ function VIKP_branch_and_bound (capacity, items) {
 		if (newNodeIn.weight <= capacity && newNodeIn.weight > solution){
 			solution = newNodeIn.weight;
 			solutionIndexes = Array.from(newNodeIn.indexes);
+			if (solution === capacity) return { solution: solution, indexes: solutionIndexes };
 		}
 
 		if ((newNodeIn.weight < capacity) && (newNodeIn.weight + bounds[newNodeIn.level + 1] > solution))
 			tree_stack.push(newNodeIn);
 	}
 
-	const solutionSubset = [];
-	for (let i = 0; i < solutionIndexes.length; i++){
-		solutionSubset.push({ index: solutionIndexes[i], item: items[solutionIndexes[i]] });
-	}
-
-	return { solution: solution, solutionSubset: solutionSubset };
+	return { solution: solution, indexes: solutionIndexes };
 }

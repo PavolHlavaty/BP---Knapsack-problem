@@ -1,86 +1,153 @@
-// import VIKP_dynamic_programming from './algorithms/VIKP_dynamic_programming';
+function getItems (text) {
+	var rows = text.split('\n');
+	var items = [];
+	for (let i = 0; i < rows.length - 1; i++){
+		var values = rows[i].split(',');
+		items.push({
+			weight: Number(values[0]),
+			profit: Number(values[1]),
+			index: i,
+			knapsack: -1,
+		});
+	}
+	return items;
+}
 
-$('form').submit((event) => {
-	var items = [
-		/*{weight:2,profit:2},
-		{weight:2,profit:2},
-		{weight:5,profit:3},
-		{weight:2,profit:1},*/
-		/*{weight:2,profit:5},
-		{weight:2,profit:6},
-		{weight:5,profit:10},
-		{weight:5,profit:9},
-		{weight:5,profit:9},
-		{weight:5,profit:9},
-		{weight:5,profit:9},
-		{weight:4,profit:1},*/
-		{weight:18,profit:78},
-		{weight:18,profit:77},
-		{weight:9,profit:35},
-		{weight:9,profit:34},
-		{weight:23,profit:89},
-		{weight:23,profit:88},
-		{weight:20,profit:36},
-		{weight:20,profit:35},
-		{weight:59,profit:94},
-		{weight:59,profit:93},
-		{weight:61,profit:75},
-		{weight:61,profit:74},
-		{weight:70,profit:74},
-		{weight:70,profit:73},
-		{weight:75,profit:79},
-		{weight:75,profit:78},
-		{weight:76,profit:80},
-		{weight:76,profit:79},
-		{weight:30,profit:16},
-		{weight:30,profit:15},
-		/*{weight:40,profit:10},
-		{weight:41,profit:9},
-		{weight:42,profit:8},
-		{weight:43,profit:7},
-		{weight:44,profit:6},
-		{weight:45,profit:5},
-		{weight:46,profit:4},
-		{weight:47,profit:3},
-		{weight:48,profit:2},
-		{weight:49,profit:1},*/
-	];
-	var capacity = 100/*[80,90,100,110]/*[10,12,12]*//*[5,6]*/;
+function getKnapsacks (text) {
+	var rows = text.split('\n');
+	var knapsacks = [];
+	for (let i = 0; i < rows.length - 1; i++){
+		knapsacks.push({
+			capacity: Number(rows[i]),
+			index: i,
+		});
+	}
+	return knapsacks;
+}
+
+function readFile (file) {
+	return new Promise(function(resolve, reject){
+		var reader = new FileReader();
+		reader.onload = function() {
+			resolve(reader.result);
+		};
+		reader.onerror = function(err) {
+			console.error('Failed to read file');
+			reject(err);
+		};
+		reader.readAsText(file);
+	});
+}
+
+async function solve (items_file, knapsacks_file) {
+	var solution;
+	var t1;
+	var t2;
+	var knapsacks;
+	var result = await readFile(items_file);
+	var items = getItems(result);
 	switch ($('#knapsack_type').val()) {
 	case '1':
+		var capacity = Number($('#capacity').val());
+
 		switch ($('#algorithm').val()) {
 		case '1':
-			var solution = VIKP_greedy(capacity, items);
-			console.log(solution);
+			t1 = performance.now();
+			solution = VIKP_greedy(capacity, items);
+			t2 = performance.now();
+			solution.time = t2 - t1;
+			solution.items.sort((a, b) => a.index - b.index);
 			break;
 		case '2':
-			var solution = VIKP_dynamic_programming(capacity, items);
-			console.log(solution);
+			t1 = performance.now();
+			solution = VIKP_dynamic_programming(capacity, items);
+			t2 = performance.now();
+			solution.time = t2 - t1;
 			break;
 		case '3':
-			var solution = VIKP_branch_and_bound(capacity, items);
-			console.log(solution);
+			t1 = performance.now();
+			var output = VIKP_branch_and_bound(capacity, items);
+			t2 = performance.now();
+			for (let i = 0; i < output.indexes.length; i++) {
+				items[output.indexes[i]].knapsack = 0;
+			}
+			solution = {
+				solution: output.solution,
+				items: items,
+				time: t2 - t1,
+			};
 			break;
 		}
 		break;
 	case '2':
+		result = await readFile(knapsacks_file);
+		knapsacks = getKnapsacks(result);
+
 		switch ($('#algorithm').val()) {
-		/*case '1':
-			var solution = VIKP_greedy(capacity, items);
-			console.log(solution);
+		case '1':
+			t1 = performance.now();
+			solution = MKP_greedy(knapsacks, items);
+			t2 = performance.now();
+			solution.time = t2 - t1;
+			solution.items.sort((a, b) => a.index - b.index);
 			break;
 		case '2':
-			var solution = VIKP_dynamic_programming(capacity, items);
-			console.log(solution);
-			break;*/
+			t1 = performance.now();
+			solution = MKP_branch_and_bound(knapsacks, items, $('#backtracks').val());
+			t2 = performance.now();
+			solution.time = t2 - t1;
+			for (let i = 0; i < items.length; i++) {
+				items[i].knapsack = solution.items[i];
+				solution.items[i] = items[i];
+			}
+			solution.items.sort((a, b) => a.index - b.index);
+			break;
+		}
+		break;
+	case '3':
+		result = await readFile(knapsacks_file);
+		knapsacks = getKnapsacks(result);
+
+		switch ($('#algorithm').val()) {
+		case '1':
+			t1 = performance.now();
+			solution = VIMKP_greedy(knapsacks, items);
+			t2 = performance.now();
+			solution.time = t2 - t1;
+			solution.items.sort((a, b) => a.index - b.index);
+			break;
+		case '2':
+			t1 = performance.now();
+			solution = VIMKP_QFL(knapsacks, items);
+			t2 = performance.now();
+			solution.time = t2 - t1;
+			solution.items.forEach(item => {
+				if (item.knapsack.index)
+					item.knapsack = item.knapsack.index;
+				delete(item.next);
+				delete(item.new_knap);
+			});
+			break;
 		case '3':
-			var solution = MKP_bound_and_bound(capacity, items);
-			console.log(solution);
+			t1 = performance.now();
+			solution = VIMKP_branch_and_bound(knapsacks, items, $('#backtracks').val());
+			t2 = performance.now();
+			solution.time = t2 - t1;
+			for (let i = 0; i < items.length; i++) {
+				items[i].knapsack = solution.items[i];
+				solution.items[i] = items[i];
+			}
+			solution.items.sort((a, b) => a.index - b.index);
 			break;
 		}
 		break;
 	default:
 		break;
 	}
+	return solution;
+}
+
+$('form').submit((event) => {
+	solve(event.target[2].files[0], event.target[3].files[0]).then(solution => console.log(solution));
 	event.preventDefault();
 });

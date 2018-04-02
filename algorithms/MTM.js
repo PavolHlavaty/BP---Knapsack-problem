@@ -1,4 +1,4 @@
-// Multiple Knapsack Problem solution using Martello and Toth's bound and bound method 
+// Multiple Knapsack Problem solution using Martello and Toth's "bound and bound" method 
 
 function SolveSingleKnapsack (profits, weights, c, n) {
 	var p = Array.from(profits);
@@ -67,25 +67,24 @@ function SolveSingleKnapsack (profits, weights, c, n) {
 	return { solution: K[n*(c+1) + c], solutionSubset: picked };
 }
 
-function MKP_bound_and_bound (capacity, items, max_backtracks) {
-	// sort items in decreasing order of profit per unit weight
-	items.sort((a, b) => (a.weight / a.profit) - (b.weight / b.profit));
-
-	// sort knapsacks in increasing order of capacity
-	capacity.sort((a, b) => a - b);
+function MTM (knapsacks, items, max_backtracks) {
 
 	class MTMSolver {
-		constructor(capacity, items, max_backtracks) {
+		constructor(knapsacks, items, max_backtracks) {
 			this.p = [];
 			this.w = [];
 			for (let i = 0; i < items.length; i++) {
 				this.p[i] = items[i].profit;
 				this.w[i] = items[i].weight;
 			}
-			this.c = Array.from(capacity);
+			this.c = [];
+			for (let i = 0; i < knapsacks.length; i++) {
+				this.c[i] = knapsacks[i].capacity; 
+			}
+			//this.c = Array.from(capacity);
 	
 			this.n = items.length;
-			this.m = capacity.length;
+			this.m = knapsacks.length;
 			this.z = 0;
 			this.i = 0;
 			this.L = 0;
@@ -467,7 +466,7 @@ function MKP_bound_and_bound (capacity, items, max_backtracks) {
 				}
 			} // heuristic
 	
-			var res = [];
+			/*var res = [];
 			for (j = 0; j < this.n+2; j++) {
 				if (j < this.n)
 					res[j] = this.x[j];
@@ -475,30 +474,12 @@ function MKP_bound_and_bound (capacity, items, max_backtracks) {
 					res[j] = this.z;
 				else
 					res[j] = this.bt;
-			}
-		
-			/*std::vector<int> ksack_weights(m);
-			for (k = 0; k < m; k++)
-				ksack_weights[k] = 0;
-			std::cout << "x =";
-			for (j = 0; j < n; j++) {
-				std::cout << " " << x[j]+1;
-				k = x[j];
-				if (k != -1) {
-					ksack_weights[k] += w[j];
-				}
-			}
-			std::cout << std::endl;
-			for (k = 0; k < m; k++) {
-				std::cout << "k[" << k+1 << "] = " << ksack_weights[k] << " / " << c[k] << std::endl;
-			}
-			std::cout << "SOLUTION = " << z << std::endl;
-			std::cout << "BACKTRACKS = " << bt << std::endl;
-			std::cout << "BACKTRACKS = " << btl << std::endl;*/
-			return res;
+			}*/
+
+			return { solution: this.z, items: this.x, backtracks: this.bt };
 		}
 	}
 
-	const Solver = new MTMSolver(capacity, items, max_backtracks);
+	const Solver = new MTMSolver(knapsacks, items, max_backtracks);
 	return Solver.solve();
 }

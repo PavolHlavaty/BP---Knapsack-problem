@@ -16,14 +16,13 @@ function VIKP_dynamic_programming (capacity, items) {
 		}
 	}
 	// get items in solution
-	var solutionSubset = [];
 	cap = capacity;
 	for (i = items.length; i > 0; i--) {
 		if (memo[i][cap] !== memo[i-1][cap]) {
-			solutionSubset.push({ index: i-1, item: items[i-1] });
+			items[i-1].knapsack = 0;
 			cap -= items[i-1].weight;
 		}
 	}
 
-	return { solution: memo[items.length][capacity], solutionSubset: solutionSubset };
+	return { solution: memo[items.length][capacity], items: items };
 }
