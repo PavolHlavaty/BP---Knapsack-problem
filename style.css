@@ -1,9 +1,27 @@
 button[type=submit] {
     width: 30%;
     margin-left: 35%;
-    margin-right: 35%
+    margin-right: 35%;
+    margin-bottom: 1em;
 }
 
-#capacity_div, #backtracks_div, #knapsacks_div {
+#capacity_div, #backtracks_div, #knapsacks_div, #solution_div {
     display: none;
+}
+
+hr {
+    width: 90%;
+}
+
+h2 {
+    margin-bottom: 1em;
+}
+
+p {
+    font-size: 2em;
+}
+
+.chart {
+    display: block;
+    margin: 0 auto !important;
 }

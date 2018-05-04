@@ -34,6 +34,9 @@ $('#knapsack_type').change(() => {
 
 		$('#capacity_div').css('display','block');
 		$('#knapsacks_div').css('display','none');
+
+		$('#capacity').prop('required',true);
+		$('#knapsacks_file').prop('required',false);
 		break;
 	case '2':
 		alg_select.empty();
@@ -42,6 +45,9 @@ $('#knapsack_type').change(() => {
 
 		$('#capacity_div').css('display','none');
 		$('#knapsacks_div').css('display','block');
+
+		$('#capacity').prop('required',false);
+		$('#knapsacks_file').prop('required',true);
 		break;
 	case '3':
 		alg_select.empty();
@@ -51,6 +57,9 @@ $('#knapsack_type').change(() => {
 
 		$('#capacity_div').css('display','none');
 		$('#knapsacks_div').css('display','block');
+
+		$('#capacity').prop('required',false);
+		$('#knapsacks_file').prop('required',true);
 		break;
 	}
 	

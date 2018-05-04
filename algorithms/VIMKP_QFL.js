@@ -111,8 +111,6 @@ function insertItem (knapsack, item) {
 
 function VIMKP_QFL (knapsacks, items) {
 	let solution = 0;
-	/*for (let i = 0; i < knapsacks.length; i++)
-		knapsacks.items = [];*/
 
 	// sort knapsacks in decreasing order of capacity
 	knapsacks.sort((a, b) => b.capacity - a.capacity);
@@ -125,8 +123,14 @@ function VIMKP_QFL (knapsacks, items) {
 	knapsacks[knapsacks.length - 1].next = undefined;
 	var knapsacks_ll = knapsacks[0];
 
+	let check_1, check_2;
+	check_1 = check_2 = true;
+	var t2, t3;
+	var rem_capacity_1 = [];
+	var rem_capacity_2 = [];
 	// insert items to knapsacks
 	items.forEach(item => { 
+		// first phase
 		if (item.weight <= knapsacks_ll.capacity) {
 			knapsacks_ll = insertItem(knapsacks_ll, item);
 			item.knapsack = knapsacks_ll;
@@ -136,18 +140,23 @@ function VIMKP_QFL (knapsacks, items) {
 			
 			let first = restoreOrder(knapsacks_ll);
 			if (first) knapsacks_ll = first;
-			/*for (let i = 1; i < knapsacks.length; i++) {
-				if (knapsacks[i-1].capacity < knapsacks[i].capacity) {
-					// swap
-					let temp = knapsacks[i];
-					knapsacks[i] = knapsacks[i-1];
-					knapsacks[i-1] = temp;
-				} else break;
-			}*/
+
 			return;
 		}
+		// store data after first phase
+		if (check_1) {
+			t2 = performance.now();
+			knapsacks.forEach(knapsack => {
+				rem_capacity_1.push({
+					capacity: knapsack.capacity,
+					index: knapsack.index,
+				});
+			});
+			check_1 = false;
+		}
+
+		// second phase
 		let cur_knap = knapsacks_ll;
-		let prev_knap;
 		while (cur_knap) {
 			let cur_item = cur_knap.items_ll;
 			let prev_item;
@@ -155,10 +164,6 @@ function VIMKP_QFL (knapsacks, items) {
 				prev_item = cur_item;
 				cur_item = cur_item.next;
 			}
-			/*if (cur_item === undefined) {
-				cur_knap = cur_knap.next;
-				continue;
-			}*/
 			if (cur_item) {
 				if (cur_knap === knapsacks_ll) {
 					if (knapsacks_ll.next !== undefined && cur_item.weight <= knapsacks_ll.next.capacity) {
@@ -169,7 +174,7 @@ function VIMKP_QFL (knapsacks, items) {
 						knapsacks_ll.next = insertItem(knapsacks_ll.next, cur_item);
 						cur_item.knapsack = knapsacks_ll.next;
 						knapsacks_ll.next.capacity -= cur_item.weight;
-						/*knapsacks_ll.next =*/ restoreOrder(knapsacks_ll.next);
+						restoreOrder(knapsacks_ll.next);
 						// insert new item
 						cur_knap = insertItem(cur_knap, item);
 						item.knapsack = cur_knap;
@@ -191,7 +196,7 @@ function VIMKP_QFL (knapsacks, items) {
 					item.knapsack = cur_knap;
 					cur_knap.capacity -= item.weight;
 					solution += item.weight;
-					/*cur_knap = */restoreOrder(cur_knap);
+					restoreOrder(cur_knap);
 					// put item to other knapsack
 					knapsacks_ll = insertItem(knapsacks_ll, cur_item);
 					cur_item.knapsack = knapsacks_ll;
@@ -201,11 +206,21 @@ function VIMKP_QFL (knapsacks, items) {
 					return;
 				}
 			}
-			prev_knap = cur_knap;
 			cur_knap = cur_knap.next;
 		}
+		// store data after second phase
+	/*	if (check_2) {
+			t3 = performance.now();
+			knapsacks.forEach(knapsack => {
+				rem_capacity_2.push({
+					capacity: knapsack.capacity,
+					index: knapsack.index,
+				});
+			});
+			check_2 = false;
+		}*/
 		
-		
+		// third phase
 		cur_knap = knapsacks_ll;
 		prev_knap = undefined;
 		while (cur_knap) {
@@ -250,8 +265,6 @@ function VIMKP_QFL (knapsacks, items) {
 								item_to_move.knapsack.capacity -= item_to_move.weight;
 								let first = restoreOrder(item_to_move.knapsack);
 								if (first) knapsacks_ll = first;
-								/*if (item_to_move.knapsack === knapsacks_ll) knapsacks_ll = restoreOrder(item_to_move.knapsack);
-								else restoreOrder(item_to_move.knapsack);*/
 							});
 							// insert new item
 							cur_knap = insertItem(cur_knap, item);
@@ -310,5 +323,180 @@ function VIMKP_QFL (knapsacks, items) {
 		}*/
 		
 	});
-	return { solution: solution, items: items};
+	/*var rem_items = [];
+	var rem_items_2 = [];
+	// first phase
+	items.forEach(item => { 
+		if (item.weight <= knapsacks_ll.capacity) {
+			knapsacks_ll = insertItem(knapsacks_ll, item);
+			item.knapsack = knapsacks_ll;
+			knapsacks_ll.capacity -= item.weight;
+			solution += item.weight;
+			// restore sorted order
+			
+			let first = restoreOrder(knapsacks_ll);
+			if (first) knapsacks_ll = first;
+
+			return;
+		} else {
+			rem_items.push(item);
+		}
+	});
+	// store data after first phase
+	t2 = performance.now();
+	knapsacks.forEach(knapsack => {
+		rem_capacity_1.push({
+			capacity: knapsack.capacity,
+			index: knapsack.index,
+		});
+	});
+
+	// second phase
+	rem_items.forEach(item => {
+		let cur_knap = knapsacks_ll;
+		while (cur_knap) {
+			let cur_item = cur_knap.items_ll;
+			let prev_item;
+			while (cur_item !== undefined && cur_item.weight + cur_knap.capacity < item.weight) {
+				prev_item = cur_item;
+				cur_item = cur_item.next;
+			}
+			if (cur_item) {
+				if (cur_knap === knapsacks_ll) {
+					if (knapsacks_ll.next !== undefined && cur_item.weight <= knapsacks_ll.next.capacity) {
+						// remove item
+						if (prev_item) prev_item.next = cur_item.next;
+						else cur_knap.items_ll = cur_item.next;
+						// put item to other knapsack
+						knapsacks_ll.next = insertItem(knapsacks_ll.next, cur_item);
+						cur_item.knapsack = knapsacks_ll.next;
+						knapsacks_ll.next.capacity -= cur_item.weight;
+						restoreOrder(knapsacks_ll.next);
+						// insert new item
+						cur_knap = insertItem(cur_knap, item);
+						item.knapsack = cur_knap;
+						cur_knap.capacity -= item.weight;
+						cur_knap.capacity += cur_item.weight;
+						solution += item.weight;
+						let first = restoreOrder(knapsacks_ll);
+						if (first) knapsacks_ll = first;
+						return;
+					}
+				}
+				else if (cur_item.weight <= knapsacks_ll.capacity){
+					// remove item
+					if (prev_item) prev_item.next = cur_item.next;
+					else cur_knap.items_ll = cur_item.next;
+					cur_knap.capacity += cur_item.weight;
+					// insert new item
+					cur_knap = insertItem(cur_knap, item);
+					item.knapsack = cur_knap;
+					cur_knap.capacity -= item.weight;
+					solution += item.weight;
+					restoreOrder(cur_knap);
+					// put item to other knapsack
+					knapsacks_ll = insertItem(knapsacks_ll, cur_item);
+					cur_item.knapsack = knapsacks_ll;
+					knapsacks_ll.capacity -= cur_item.weight;
+					let first = restoreOrder(knapsacks_ll);
+					if (first) knapsacks_ll = first;
+					return;
+				}
+			}
+			cur_knap = cur_knap.next;
+		}
+		rem_items_2.push(item);
+	});
+	// store data after second phase
+	t3 = performance.now();
+	knapsacks.forEach(knapsack => {
+		rem_capacity_2.push({
+			capacity: knapsack.capacity,
+			index: knapsack.index,
+		});
+	});
+
+	// third phase
+	rem_items_2.forEach(item => {
+		// if we released enough space to insert next item without moving other items
+		if (item.weight <= knapsacks_ll.capacity) {
+			knapsacks_ll = insertItem(knapsacks_ll, item);
+			item.knapsack = knapsacks_ll;
+			knapsacks_ll.capacity -= item.weight;
+			solution += item.weight;
+			// restore sorted order
+			
+			let first = restoreOrder(knapsacks_ll);
+			if (first) knapsacks_ll = first;
+
+			return;
+		}
+		cur_knap = knapsacks_ll;
+		prev_knap = undefined;
+		while (cur_knap) {
+			let command_list = [];
+			knapsacks.forEach(knapsack => {
+				knapsack.new_capacity = knapsack.capacity;
+			});
+			let cur_knap_target = knapsacks_ll;
+			while (cur_knap_target) {
+				if (cur_knap.index === cur_knap_target.index) {
+					cur_knap_target = cur_knap_target.next;
+					continue;
+				}
+				let cur_item = cur_knap.items_ll;
+				let good_item;
+				let prev_item;
+				if (cur_item && cur_item.weight <= cur_knap_target.new_capacity) {
+					good_item = cur_item.new_knap ? undefined : cur_item;
+					while (cur_item.next && cur_item.next.weight <= cur_knap_target.new_capacity) {
+						if (cur_item.next.new_knap === undefined) {
+							prev_item = cur_item;
+							good_item = cur_item.next;
+						}
+						cur_item = cur_item.next;
+					}
+					if (good_item) {
+						good_item.new_knap = cur_knap_target;
+						command_list.push(good_item);
+						cur_knap_target.new_capacity -= good_item.weight;
+						cur_knap.new_capacity += good_item.weight;
+						if (item.weight <= cur_knap.new_capacity) {
+							// execute commands
+							command_list.forEach(item_to_move => {
+								// remove item
+								if (prev_item) prev_item.next = item_to_move.next;
+								else item_to_move.knapsack.items_ll = item_to_move.next;
+								// put item to other knapsack
+								item_to_move.new_knap = insertItem(item_to_move.new_knap, item_to_move);
+								item_to_move.knapsack = item_to_move.new_knap;
+								item_to_move.new_knap.new_capacity = undefined;
+								item_to_move.new_knap = undefined;
+								item_to_move.knapsack.capacity -= item_to_move.weight;
+								let first = restoreOrder(item_to_move.knapsack);
+								if (first) knapsacks_ll = first;
+							});
+							// insert new item
+							cur_knap = insertItem(cur_knap, item);
+							item.knapsack = cur_knap;
+							solution += item.weight;
+							cur_knap.capacity = cur_knap.new_capacity - item.weight;
+							let first = restoreOrder(cur_knap);
+							if (first) knapsacks_ll = first;
+							return;
+						}
+					}
+				}
+				cur_knap_target = good_item ? cur_knap_target : cur_knap_target.next;
+			}
+			// restore unused
+			command_list.forEach(item_to_move => {
+				item_to_move.new_knap = undefined;
+			});
+
+			cur_knap = cur_knap.next;
+		}
+	});*/
+
+	return { solution: solution, items: items, t2: t2, t3: t3, rem_capacity_1: rem_capacity_1/*, rem_capacity_2: rem_capacity_2*/};
 }

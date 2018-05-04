@@ -12,6 +12,7 @@
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
     crossorigin="anonymous">
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     
   <link rel="stylesheet" type="text/css" href="style.css">
 
@@ -24,25 +25,25 @@
     <form>
       <div class="form-group">
         <label>Knapsack problem</label>
-        <select id="knapsack_type" class="custom-select">
-          <option selected>Choose...</option>
+        <select id="knapsack_type" class="custom-select" required>
+          <option disabled selected>Choose...</option>
           <option value="1">Value Independent KP</option>
           <option value="2">Multiple KP</option>
-          <option value="3">Multiple Value Independent KP</option>
+          <option value="3">Value Independent Multiple KP</option>
         </select>
       </div>
 
       <div class="form-group">
         <label>Algorithm</label>
-        <select id="algorithm" class="custom-select">
-          <option selected>Choose...</option>
+        <select id="algorithm" class="custom-select" required>
+          <option disabled selected>Choose...</option>
         </select>
       </div>
 
       <div class="form-group">
         <label>Dataset for items</label>
         <div class="custom-file">
-          <input type="file" class="custom-file-input" id="items_file">
+          <input type="file" class="custom-file-input" id="items_file" required>
           <label class="custom-file-label" for="items_file">Choose file</label>
         </div>
       </div>
@@ -67,6 +68,41 @@
 
       <button type="submit" class="btn btn-primary">Solve</button>
     </form>
+  </div>
+  <div id="solution_div">
+    <hr>
+    <h2 class="text-center">Solution</h2>
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-4">
+          <h3>Profit:</h3>
+          <p class="text-center" id="profit"></p>
+        </div>
+        <div class="col-sm-4">
+          <h3>Total load:</h3>
+          <p class="text-center" id="load"></p>
+        </div>
+        <div class="col-sm-4">
+          <h3>Time:</h3>
+          <p class="text-center" id="time"></p>
+        </div>
+      </div>
+      <h3>Knapsacks</h3>
+      <div id="knap_visual"></div>
+      <h3>Items</h3>
+      <table class="table table-sm" id="items_table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Weight</th>
+            <th scope="col">Profit</th>
+            <th scope="col">Knapsack</th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+    </div>
   </div>
 
   <script src="scripts.js"></script>
