@@ -72,10 +72,10 @@ async function solve (items_files, knapsacks_file) {
 		}
 		solution.load = (total_load / total_cap) * 100;
 	};
-	//for (let i = 0; i < items_files.length; i++) {
-	//	var result = await readFile(items_files[i]);
+
 	var result = await readFile(items_files[0]);
 	var items = getItems(result);
+	// run selected algorithm
 	switch ($('#knapsack_type').val()) {
 	case '1':
 		var capacity = Number($('#capacity').val());
@@ -157,18 +157,13 @@ async function solve (items_files, knapsacks_file) {
 			t1 = performance.now();
 			solution = VIMKP_QFL(knapsacks, items);
 			t2 = performance.now();
-			solution.time_1 = solution.t2 - t1;
-			/*solution.time_2 = solution.t3 - solution.t2;
-			solution.time_3 = t2 - solution.t3;*/
-			solution.time_2 = t2 - solution.t2;
+			solution.time_1_phase = solution.t2 - t1;
+			solution.time_2_phase = t2 - solution.t2;
 			solution.time = t2 - t1; 
-			solution.knapsacks_load_1 = getLoadFromRemCap(knapsacks_copy, solution.rem_capacity_1);
-			//solution.knapsacks_load_2 = getLoadFromRemCap(knapsacks_copy, solution.rem_capacity_2);
-			solution.solutio_1 = 0;
-			//solution.solutio_2 = 0;
+			solution.knapsacks_load_1_phase = getLoadFromRemCap(knapsacks_copy, solution.rem_capacity_1);
+			solution.solution_1_phase = 0;
 			for (let i = 0; i < knapsacks.length; i++) {
-				solution.solutio_1 += solution.knapsacks_load_1[i];
-				//solution.solutio_2 += solution.knapsacks_load_2[i];
+				solution.solution_1_phase += solution.knapsacks_load_1_phase[i];
 			}
 			solution.items.forEach(item => {
 				if (item.knapsack.index !== undefined)
@@ -179,7 +174,6 @@ async function solve (items_files, knapsacks_file) {
 			delete(solution.t2);
 			delete(solution.t3);
 			delete(solution.rem_capacity_1);
-			//delete(solution.rem_capacity_2);
 			break;
 		case '3':
 			t1 = performance.now();
@@ -201,9 +195,6 @@ async function solve (items_files, knapsacks_file) {
 		break;
 	}
 	return solution;
-	//solutions.push(solution);
-	//}
-	//return solutions;
 }
 
 function loadChart(myCallback) {
@@ -223,8 +214,6 @@ function drawChart(elementId, load, capacity, index) {
 		sliceVisibilityThreshold: 0.0000001,
 		title: 'Knapsack: ' + index + ' Capacity: ' + capacity,
 		tooltip: {
-			//showColorCode: true,
-			//text: 'value',
 			trigger: 'selection'
 		},
 		pieHole: 0.4,
@@ -236,6 +225,7 @@ function drawChart(elementId, load, capacity, index) {
 
 $('form').submit((event) => {
 	solve(event.target[2].files, event.target[3].files[0]).then(solution => {
+		// display solution
 		$('#solution_div').css('display','block');
 
 		console.log(solution);
@@ -275,9 +265,6 @@ $('form').submit((event) => {
 			table_body.append(new_row);
 			
 		}
-		
-
-	});
-		
+	});		
 	event.preventDefault();
 });

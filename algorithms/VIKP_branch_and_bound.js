@@ -1,4 +1,4 @@
-// Value Independent Knapsack Problem solution using branch & bound algorithm
+// Branch & bound algorithm to solve Value Independent Knapsack Problem
 
 function VIKP_branch_and_bound (capacity, items) {
 	// compute bounds

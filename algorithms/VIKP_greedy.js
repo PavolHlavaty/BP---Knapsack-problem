@@ -1,4 +1,4 @@
-// Value Independent Knapsack Problem solution using greedy alghoritm
+// Greedy alghoritm to solve Value Independent Knapsack Problem 
 
 function VIKP_greedy (capacity, items) {
 	// sort items in decreasing order according to their weight

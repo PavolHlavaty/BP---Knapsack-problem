@@ -1,4 +1,4 @@
-// Approximate solution for Multiple Knapsack Problem using greedy alghoritm
+//Greedy alghoritm to solve Multiple Knapsack Problem
 
 function MKP_greedy (knapsacks, items) {
 	// sort items in decreasing order of profit per unit weight

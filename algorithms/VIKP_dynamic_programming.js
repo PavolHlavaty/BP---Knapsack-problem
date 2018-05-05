@@ -1,4 +1,4 @@
-// Value Independent Knapsack Problem solution using dynamic programming
+// Dynamic programming algorithm to solve Value Independent Knapsack Problem
 
 function VIKP_dynamic_programming (capacity, items) {
 	// define table

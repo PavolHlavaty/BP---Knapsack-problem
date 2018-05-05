@@ -1,4 +1,4 @@
-// Multiple Knapsack Problem solution using Martello and Toth's "bound and bound" method 
+// MTM alghoritm by Martello and Toth (bound & bound)
 
 function SolveSingleKnapsack (profits, weights, c, n) {
 	var p = Array.from(profits);
@@ -81,7 +81,6 @@ function MTM (knapsacks, items, max_backtracks) {
 			for (let i = 0; i < knapsacks.length; i++) {
 				this.c[i] = knapsacks[i].capacity; 
 			}
-			//this.c = Array.from(capacity);
 	
 			this.n = items.length;
 			this.m = knapsacks.length;
@@ -131,7 +130,7 @@ function MTM (knapsacks, items, max_backtracks) {
 	
 			var sol = SolveSingleKnapsack(this.p, this.w, ct, this.n);
 			this.U = sol.solution;
-			this.xr = sol.solutionSubset; // deep?
+			this.xr = sol.solutionSubset;
 			this.Ur = this.U;
 			this.counter = 0;
 		}
@@ -260,9 +259,6 @@ function MTM (knapsacks, items, max_backtracks) {
 			this.L = this.ph;
 	
 			// Remaining items
-			/*std::list<int> Nd,N_;
-			std::list<int> Si = S[i];
-			std::list<int>::iterator jit,fit;*/
 			var Nd = [];
 			var N_ = [];
 	
@@ -274,11 +270,6 @@ function MTM (knapsacks, items, max_backtracks) {
 				var fit = this.S[this.i].find(item => item === jit);
 				if (fit == undefined) N_.push(jit);
 			});
-			/*for (jit = Nd.begin(); jit != Nd.end(); jit++) { 			
-				//fit = std::find(Si.begin(), Si.end(), *jit);
-				if (!(fit != Si.end()))
-					N_.push_back(*jit);
-			}*/
 	
 			// Remaining capacity
 			var c_ = this.cr[this.i];
@@ -296,7 +287,6 @@ function MTM (knapsacks, items, max_backtracks) {
 				var w_ = [];
 				var xtt = [];
 		
-	
 				// Update profits and weights
 				n_ = N_.length;
 				cnt = 0;
@@ -309,10 +299,6 @@ function MTM (knapsacks, items, max_backtracks) {
 				var sol = SolveSingleKnapsack(p_, w_, c_, n_);
 				z_ = sol.solution;
 				xtt = sol.solutionSubset;
-
-				/*console.log(xtt);
-				console.log(this.counter);
-				this.counter++;*/
 	
 				// Update solution for knapsack k
 				cnt = 0;
@@ -337,8 +323,6 @@ function MTM (knapsacks, items, max_backtracks) {
 				if (k < this.m)
 					c_ = this.c[k];
 			}
-			/*console.log(this.counter, this.L, this.U);
-			this.counter++;*/
 		}
 	
 		solve () {
@@ -465,16 +449,6 @@ function MTM (knapsacks, items, max_backtracks) {
 					}
 				}
 			} // heuristic
-	
-			/*var res = [];
-			for (j = 0; j < this.n+2; j++) {
-				if (j < this.n)
-					res[j] = this.x[j];
-				else if (j === this.n)
-					res[j] = this.z;
-				else
-					res[j] = this.bt;
-			}*/
 
 			return { solution: this.z, items: this.x, backtracks: this.bt };
 		}

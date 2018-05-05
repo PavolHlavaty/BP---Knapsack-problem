@@ -21,6 +21,7 @@ function should_display_backtracks() {
 		$('#backtracks_div').css('display','none');
 }
 
+// display desired fields in form 
 $('#knapsack_type').change(() => {
 	should_display_backtracks();
 

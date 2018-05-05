@@ -1,4 +1,4 @@
-// Value Independent Mulitple Knpasack Problem solution using branch and bound algorithm
+// Branch and bound algorithm to solve Value Independent Mulitple Knpasack Problem
 
 function VIMKP_branch_and_bound (knapsacks, items, max_backtracks) {
 	// sort items in decreasing order according to their weight

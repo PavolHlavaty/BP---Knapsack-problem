@@ -1,4 +1,4 @@
-// Mulitple Knpasack Problem solution using branch and bound algorithm
+// Branch and bound algorithm to solve Multiple Knapsack Problem 
 
 function MKP_branch_and_bound (knapsacks, items, max_backtracks) {
 	// sort items in decreasing order of profit per unit weight

@@ -1,4 +1,4 @@
-// Approximate solution for Value Independent Multiple Knapsack Problem using greedy alghoritm
+// Greedy alghoritm to solve Value Independent Multiple Knapsack Problem
 
 function VIMKP_greedy (knapsacks, items) {
 	// sort items in decreasing order according to their weight
